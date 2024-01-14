@@ -1,66 +1,49 @@
-## Foundry
+# Assignment 3 : Token Swap Smart Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+1. **Build:**
 
-Foundry consists of:
+   ```bash
+   forge build
+   ```
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+2. **Test:**
 
-## Documentation
+   ```bash
+   forge test
+   ```
 
-https://book.getfoundry.sh/
+## Contract Overview
 
-## Usage
+The `TokenSwap` contract allows two parties to exchange ERC-20 tokens in a secure and straightforward manner. Each party specifies the token they offer (`token1` and `token2`), the amount they want to exchange (`amount1` and `amount2`), and the address that will receive the tokens from the other party (`owner1` and `owner2`). The swapping process is executed through the `swap` function.
 
-### Build
+## Variables
 
-```shell
-$ forge build
-```
+- **`token1`**: Instance of the ERC-20 token to be exchanged by the first party.
+- **`owner1`**: Address of the first party, who initiates the swap for `token1`.
+- **`amount1`**: Amount of `token1` to be exchanged by the first party.
+- **`token2`**: Instance of the ERC-20 token to be exchanged by the second party.
+- **`owner2`**: Address of the second party, who initiates the swap for `token2`.
+- **`amount2`**: Amount of `token2` to be exchanged by the second party.
 
-### Test
+## Constructor
 
-```shell
-$ forge test
-```
+The constructor initializes the contract with the specified token addresses, owners, and exchange amounts.
 
-### Format
+## Functions
 
-```shell
-$ forge fmt
-```
+### `swap()`
 
-### Gas Snapshots
+- **Description**: Executes the token swap.
+- **Modifiers**: Requires that the caller is either `owner1` or `owner2`.
+- **Error Handling**: Ensures that only authorized parties can initiate the swap. Calls the internal function `_safeTransferFrom` to transfer tokens securely.
 
-```shell
-$ forge snapshot
-```
+### `_safeTransferFrom()`
 
-### Anvil
+- **Description**: Safely transfers ERC-20 tokens from one address to another.
+- **Parameters**:
+  - `token`: ERC-20 token instance.
+  - `sender`: Address from which tokens are transferred.
+  - `recipient`: Address receiving the tokens.
+  - `amount`: Amount of tokens to be transferred.
+- **Error Handling**: Requires a successful token transfer; otherwise, it throws an error indicating that the transfer failed.
 
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
